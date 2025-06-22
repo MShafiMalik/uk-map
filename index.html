@@ -164,9 +164,14 @@
 
   const markers = [];
   let map;
+  const centerLocation = { lat: 56.017, lng: -3.111 };
 
   const hideSidebar = () => {
     locationSidebar.style.left = "-100%";
+
+    map.setZoom(9);
+    map.panTo(centerLocation);
+
     markers.forEach((locationMarkers) => {
       locationMarkers.forEach((item) => item.setAnimation(null));
     });
@@ -175,7 +180,7 @@
   async function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
       zoom: 9,
-      center: { lat: 56.017, lng: -3.111 },
+      center: centerLocation,
     });
 
     const response = await fetch(
@@ -206,6 +211,21 @@
           title: location.name,
           map: null,
         });
+
+        (function (marker, location) {
+          google.maps.event.addListener(marker, "click", function (e) {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+
+            headerText.innerHTML = location.name;
+            locationName.innerHTML = location.name;
+            locationDesc.innerHTML = location.description;
+
+            map.panTo(marker.getPosition());
+            map.setZoom(12);
+
+            locationSidebar.style.left = "0";
+          });
+        })(marker, location);
 
         if (!markers[catIndex]) {
           markers[catIndex] = [];
@@ -298,12 +318,6 @@
         const marker = markers[catIndex][locationIndex];
 
         marker.setAnimation(google.maps.Animation.BOUNCE);
-
-        console.log({
-          name,
-          description,
-          location: data[catIndex].locations[locationIndex],
-        });
 
         headerText.innerHTML = name;
         locationName.innerHTML = name;
