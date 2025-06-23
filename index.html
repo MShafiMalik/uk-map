@@ -11,10 +11,10 @@
   }
   #map {
     height: 100%;
-    width: calc(100% - 431px);
+    width: calc(100% - 380px);
   }
   #sidebar {
-    width: 431px;
+    width: 380px;
     background: #f7f7f7;
     height: 100%;
     border-right: 1px solid #ccc;
@@ -84,7 +84,7 @@
     position: absolute;
     left: -100%;
     top: 0;
-    width: 431px;
+    width: 380px;
     height: 100%;
     background: #f7f7f7;
     overflow: hidden;
@@ -318,6 +318,8 @@
         const marker = markers[catIndex][locationIndex];
 
         marker.setAnimation(google.maps.Animation.BOUNCE);
+        map.panTo(marker.getPosition());
+        map.setZoom(12);
 
         headerText.innerHTML = name;
         locationName.innerHTML = name;
